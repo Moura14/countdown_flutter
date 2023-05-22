@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:slide_countdown/slide_countdown.dart';
+import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
 
 class CountDownCard extends StatelessWidget {
   final String title;
+  final streamDuration = StreamDuration(const Duration(hours: 2));
 
-  const CountDownCard(this.title, {super.key});
+  CountDownCard(this.title, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,16 +21,13 @@ class CountDownCard extends StatelessWidget {
               title,
               style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            const SlideCountdown(
-              textStyle: TextStyle(
-                  fontSize: 15,
-                  color: Colors.grey,
-                  fontWeight: FontWeight.bold),
-              decoration: BoxDecoration(),
-              duration: Duration(days: 354),
-              separatorType: SeparatorType.title,
-              slideDirection: SlideDirection.up,
+            const SizedBox(
+              height: 10,
             ),
+            TimerCountdown(
+                format: CountDownTimerFormat.daysHoursMinutesSeconds,
+                endTime: DateTime.now().add(const Duration(
+                    days: 2, hours: 2, minutes: 30, seconds: 34)))
           ],
         ),
       ),

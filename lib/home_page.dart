@@ -1,37 +1,41 @@
 import 'package:countdown_flutter/widgets/countdown_card.dart';
 import 'package:flutter/material.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  final _eventController = TextEditingController();
+
+  final _dateController = TextEditingController();
+
+  List<String> event = [];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        title: const Text('CountDown Flutter'),
-        centerTitle: true,
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.black,
-        onPressed: () {
-          _dialog(context);
-        },
-        child: const Icon(Icons.add),
-      ),
-      body: ListView(
-        padding: const EdgeInsets.all(10),
-        children: [
-          Column(
-            children: const [
-              CountDownCard('Teste 01'),
-              CountDownCard('Teste 02'),
-              CountDownCard('Teste 03')
-            ],
-          )
-        ],
-      ),
-    );
+        appBar: AppBar(
+          backgroundColor: Colors.black,
+          title: const Text('CountDown Flutter'),
+          centerTitle: true,
+        ),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.black,
+          onPressed: () {
+            _dialog(context);
+          },
+          child: const Icon(Icons.add),
+        ),
+        body: ListView.builder(
+          itemCount: event.length,
+          itemBuilder: (BuildContext context, int index) {
+            return CountDownCard(_eventController.text.toString());
+          },
+        ));
   }
 
   void _dialog(BuildContext context) {
@@ -45,13 +49,15 @@ class HomePage extends StatelessWidget {
                   padding: const EdgeInsets.all(20),
                   child: Column(
                     children: [
-                      const TextField(
-                        decoration: InputDecoration(labelText: "Evento"),
+                      TextField(
+                        controller: _eventController,
+                        decoration: const InputDecoration(labelText: "Evento"),
                       ),
-                      const TextField(
+                      TextField(
+                        controller: _dateController,
                         keyboardType: TextInputType.datetime,
                         decoration:
-                            InputDecoration(labelText: "Data do evento"),
+                            const InputDecoration(labelText: "Data do evento"),
                       ),
                       const SizedBox(
                         height: 20,
@@ -68,7 +74,12 @@ class HomePage extends StatelessWidget {
                                 style: TextStyle(color: Colors.black),
                               )),
                           TextButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                final teste = _eventController.text.toString();
+                                event.add(teste);
+                                Navigator.of(context).pop();
+                                setState(() {});
+                              },
                               child: const Text(
                                 'Adicionar',
                                 style: TextStyle(color: Colors.black),
