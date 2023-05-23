@@ -1,5 +1,7 @@
 import 'package:countdown_flutter/widgets/countdown_card.dart';
 import 'package:flutter/material.dart';
+import 'package:brasil_fields/brasil_fields.dart';
+import 'package:flutter/services.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -33,7 +35,7 @@ class _HomePageState extends State<HomePage> {
         body: ListView.builder(
           itemCount: event.length,
           itemBuilder: (BuildContext context, int index) {
-            return CountDownCard(_eventController.text.toString());
+            return CountDownCard(_eventController.text, showBottom);
           },
         ));
   }
@@ -54,6 +56,10 @@ class _HomePageState extends State<HomePage> {
                         decoration: const InputDecoration(labelText: "Evento"),
                       ),
                       TextField(
+                        inputFormatters: [
+                          FilteringTextInputFormatter.digitsOnly,
+                          DataInputFormatter()
+                        ],
                         controller: _dateController,
                         keyboardType: TextInputType.datetime,
                         decoration:
@@ -75,10 +81,11 @@ class _HomePageState extends State<HomePage> {
                               )),
                           TextButton(
                               onPressed: () {
-                                final teste = _eventController.text.toString();
-                                event.add(teste);
-                                Navigator.of(context).pop();
-                                setState(() {});
+                                final teste = _eventController.value.text;
+                                setState(() {
+                                  event.add(teste);
+                                  Navigator.of(context).pop();
+                                });
                               },
                               child: const Text(
                                 'Adicionar',
@@ -91,5 +98,33 @@ class _HomePageState extends State<HomePage> {
             ],
           );
         });
+  }
+
+  void showBottom() {
+    showModalBottomSheet(
+        context: context,
+        builder: ((context) {
+          return SizedBox(
+            height: 100,
+            child: Center(
+              child: Column(
+                children: [
+                  TextButton(
+                      onPressed: () {},
+                      child: const Text(
+                        'Editar',
+                        style: TextStyle(color: Colors.black),
+                      )),
+                  TextButton(
+                      onPressed: () {},
+                      child: const Text(
+                        'Excluir',
+                        style: TextStyle(color: Colors.black),
+                      ))
+                ],
+              ),
+            ),
+          );
+        }));
   }
 }
