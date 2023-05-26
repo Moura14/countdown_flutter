@@ -12,10 +12,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final _eventController = TextEditingController();
-
   final _dateController = TextEditingController();
-
-  List<String> event = [];
+  Map<String, dynamic> _countDownRemove = {};
+  final _itemFocus = FocusNode();
+  final List event = [];
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> {
         body: ListView.builder(
           itemCount: event.length,
           itemBuilder: (BuildContext context, int index) {
-            return CountDownCard(_eventController.text, showBottom);
+            return CountDownCard(event[index]['title'], _showBottom);
           },
         ));
   }
@@ -81,11 +81,12 @@ class _HomePageState extends State<HomePage> {
                               )),
                           TextButton(
                               onPressed: () {
-                                final teste = _eventController.value.text;
-                                setState(() {
-                                  event.add(teste);
-                                  Navigator.of(context).pop();
-                                });
+                                if (_eventController.text.isNotEmpty) {
+                                  _addList();
+                                } else {
+                                  FocusScope.of(context)
+                                      .requestFocus(_itemFocus);
+                                }
                               },
                               child: const Text(
                                 'Adicionar',
@@ -100,7 +101,7 @@ class _HomePageState extends State<HomePage> {
         });
   }
 
-  void showBottom() {
+  void _showBottom() {
     showModalBottomSheet(
         context: context,
         builder: ((context) {
@@ -126,5 +127,22 @@ class _HomePageState extends State<HomePage> {
             ),
           );
         }));
+  }
+
+  void _addList() {
+    setState(() {
+      Map<String, dynamic> newList = {};
+      newList['title'] = _eventController.text;
+      _eventController.text = "";
+      event.add(newList);
+      Navigator.of(context).pop();
+    });
+  }
+
+  void _removeList(int index) {
+    setState(() {
+      _countDownRemove = Map.from(event[index]);
+      event.removeAt(index);
+    });
   }
 }

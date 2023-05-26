@@ -4,10 +4,10 @@ import 'package:slide_countdown/slide_countdown.dart';
 
 class CountDownCard extends StatelessWidget {
   final String title;
-  Function function;
+  Function function1;
   final streamDuration = StreamDuration(const Duration(hours: 2));
 
-  CountDownCard(this.title, this.function, {super.key});
+  CountDownCard(this.title, this.function1, {super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class CountDownCard extends StatelessWidget {
       child: Card(
           child: GestureDetector(
         onTap: () {
-          function();
+          function1();
         },
         child: Column(
           children: [
