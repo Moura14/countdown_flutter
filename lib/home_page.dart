@@ -1,7 +1,7 @@
-import 'package:countdown_flutter/widgets/countdown_card.dart';
 import 'package:flutter/material.dart';
 import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_timer_countdown/flutter_timer_countdown.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -35,9 +35,42 @@ class _HomePageState extends State<HomePage> {
         body: ListView.builder(
           itemCount: event.length,
           itemBuilder: (BuildContext context, int index) {
-            return CountDownCard(event[index]['title'], _showBottom);
+            return _countDownCard(context, index);
           },
         ));
+  }
+
+  Widget _countDownCard(BuildContext context, int index) {
+    return SizedBox(
+      height: 100,
+      width: MediaQuery.of(context).size.width,
+      child: Card(
+        child: GestureDetector(
+          onTap: () {
+            _showBottom(context, index);
+          },
+          child: Column(
+            children: [
+              Text(
+                event[index]['title'],
+                style:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              TimerCountdown(
+                endTime: DateTime.now().add(const Duration(
+                    days: 5, hours: 14, minutes: 4, seconds: 21)),
+                onEnd: () {
+                  print('Acabou!');
+                },
+              )
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   void _dialog(BuildContext context) {
@@ -101,7 +134,7 @@ class _HomePageState extends State<HomePage> {
         });
   }
 
-  void _showBottom() {
+  void _showBottom(BuildContext context, int index) {
     showModalBottomSheet(
         context: context,
         builder: ((context) {
@@ -117,7 +150,13 @@ class _HomePageState extends State<HomePage> {
                         style: TextStyle(color: Colors.black),
                       )),
                   TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        setState(() {
+                          _countDownRemove = Map.from(event[index]);
+                          event.removeAt(index);
+                          Navigator.of(context).pop();
+                        });
+                      },
                       child: const Text(
                         'Excluir',
                         style: TextStyle(color: Colors.black),
@@ -136,13 +175,6 @@ class _HomePageState extends State<HomePage> {
       _eventController.text = "";
       event.add(newList);
       Navigator.of(context).pop();
-    });
-  }
-
-  void _removeList(int index) {
-    setState(() {
-      _countDownRemove = Map.from(event[index]);
-      event.removeAt(index);
     });
   }
 }
