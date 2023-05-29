@@ -60,8 +60,8 @@ class _HomePageState extends State<HomePage> {
                 height: 10,
               ),
               TimerCountdown(
-                endTime: DateTime.now().add(const Duration(
-                    days: 5, hours: 14, minutes: 4, seconds: 21)),
+                format: CountDownTimerFormat.daysHoursMinutesSeconds,
+                endTime: DateTime.utc(2023, 31, 12),
                 onEnd: () {
                   print('Acabou!');
                 },
