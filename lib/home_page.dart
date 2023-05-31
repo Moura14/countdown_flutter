@@ -61,7 +61,7 @@ class _HomePageState extends State<HomePage> {
               ),
               TimerCountdown(
                 format: CountDownTimerFormat.daysHoursMinutesSeconds,
-                endTime: DateTime.utc(2023, 31, 12),
+                endTime: DateTime.utc(event[index]['data']),
                 onEnd: () {
                   print('Acabou!');
                 },
@@ -114,7 +114,8 @@ class _HomePageState extends State<HomePage> {
                               )),
                           TextButton(
                               onPressed: () {
-                                if (_eventController.text.isNotEmpty) {
+                                if (_eventController.text.isNotEmpty &&
+                                    _dateController.text.isNotEmpty) {
                                   _addList();
                                 } else {
                                   FocusScope.of(context)
@@ -173,8 +174,13 @@ class _HomePageState extends State<HomePage> {
       Map<String, dynamic> newList = {};
       newList['title'] = _eventController.text;
       _eventController.text = "";
-      event.add(newList);
-      Navigator.of(context).pop();
+      final value = _dateController.text;
+      final split = value.split('/');
+      newList['data'] = split;
+      _dateController.text = "";
+      print(newList);
+      // event.add(newList);
+      // Navigator.of(context).pop();
     });
   }
 }
