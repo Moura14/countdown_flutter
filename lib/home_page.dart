@@ -61,7 +61,7 @@ class _HomePageState extends State<HomePage> {
               ),
               TimerCountdown(
                 format: CountDownTimerFormat.daysHoursMinutesSeconds,
-                endTime: DateTime.utc(event[index]['data']),
+                endTime: DateTime.utc(2023, 12, 31),
                 onEnd: () {
                   print('Acabou!');
                 },
@@ -85,6 +85,7 @@ class _HomePageState extends State<HomePage> {
                   child: Column(
                     children: [
                       TextField(
+                        focusNode: _itemFocus,
                         controller: _eventController,
                         decoration: const InputDecoration(labelText: "Evento"),
                       ),
@@ -176,11 +177,11 @@ class _HomePageState extends State<HomePage> {
       _eventController.text = "";
       final value = _dateController.text;
       final split = value.split('/');
-      newList['data'] = split;
+      newList['data'] = split.join(",");
       _dateController.text = "";
+      event.add(newList);
       print(newList);
-      // event.add(newList);
-      // Navigator.of(context).pop();
+      Navigator.of(context).pop();
     });
   }
 }
