@@ -15,7 +15,7 @@ class _HomePageState extends State<HomePage> {
   final _dateController = TextEditingController();
   Map<String, dynamic> _countDownRemove = {};
   final _itemFocus = FocusNode();
-  final List event = [];
+  List event = [];
 
   @override
   Widget build(BuildContext context) {
@@ -42,33 +42,50 @@ class _HomePageState extends State<HomePage> {
 
   Widget _countDownCard(BuildContext context, int index) {
     return SizedBox(
-      height: 100,
+      height: 115,
       width: MediaQuery.of(context).size.width,
       child: Card(
         child: GestureDetector(
-          onTap: () {
-            _showBottom(context, index);
-          },
-          child: Column(
-            children: [
-              Text(
-                event[index]['title'],
-                style:
-                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              TimerCountdown(
-                format: CountDownTimerFormat.daysHoursMinutesSeconds,
-                endTime: DateTime.utc(2023, 12, 31),
-                onEnd: () {
-                  print('Acabou!');
-                },
-              )
-            ],
-          ),
-        ),
+            onTap: () {
+              _showBottom(context, index);
+            },
+            child: Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 70,
+                    top: 15,
+                  ),
+                  child: Column(
+                    children: [
+                      Text(
+                        event[index]['title'],
+                        style: const TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      TimerCountdown(
+                        format: CountDownTimerFormat.daysHoursMinutesSeconds,
+                        endTime:
+                            DateTime.parse(event[index]['data'].toString()),
+                        onEnd: () {
+                          print('Acabou');
+                        },
+                      )
+                    ],
+                  ),
+                ),
+                Positioned(
+                    left: 340,
+                    child: IconButton(
+                        onPressed: () {
+                          _showBottom(context, index);
+                        },
+                        icon: const Icon(Icons.more_vert)))
+              ],
+            )),
       ),
     );
   }
@@ -146,7 +163,9 @@ class _HomePageState extends State<HomePage> {
               child: Column(
                 children: [
                   TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        _dialog(context);
+                      },
                       child: const Text(
                         'Editar',
                         style: TextStyle(color: Colors.black),
@@ -177,10 +196,9 @@ class _HomePageState extends State<HomePage> {
       _eventController.text = "";
       final value = _dateController.text;
       final split = value.split('/');
-      newList['data'] = split.join(",");
+      newList['data'] = split.reversed.join('-');
       _dateController.text = "";
       event.add(newList);
-      print(newList);
       Navigator.of(context).pop();
     });
   }
