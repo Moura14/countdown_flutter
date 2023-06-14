@@ -18,6 +18,12 @@ class _HomePageState extends State<HomePage> {
   List event = [];
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
@@ -46,9 +52,7 @@ class _HomePageState extends State<HomePage> {
       width: MediaQuery.of(context).size.width,
       child: Card(
         child: GestureDetector(
-            onTap: () {
-              _showBottom(context, index);
-            },
+            onTap: () {},
             child: Stack(
               children: [
                 Padding(
@@ -81,9 +85,9 @@ class _HomePageState extends State<HomePage> {
                     left: 340,
                     child: IconButton(
                         onPressed: () {
-                          _showBottom(context, index);
+                          _showDialog(context, index);
                         },
-                        icon: const Icon(Icons.more_vert)))
+                        icon: const Icon(Icons.delete_outline)))
               ],
             )),
       ),
@@ -153,40 +157,35 @@ class _HomePageState extends State<HomePage> {
         });
   }
 
-  void _showBottom(BuildContext context, int index) {
-    showModalBottomSheet(
+  void _showDialog(BuildContext context, int index) {
+    showDialog(
         context: context,
-        builder: ((context) {
-          return SizedBox(
-            height: 100,
-            child: Center(
-              child: Column(
-                children: [
-                  TextButton(
-                      onPressed: () {
-                        _dialog(context);
-                      },
-                      child: const Text(
-                        'Editar',
-                        style: TextStyle(color: Colors.black),
-                      )),
-                  TextButton(
-                      onPressed: () {
-                        setState(() {
-                          _countDownRemove = Map.from(event[index]);
-                          event.removeAt(index);
-                          Navigator.of(context).pop();
-                        });
-                      },
-                      child: const Text(
-                        'Excluir',
-                        style: TextStyle(color: Colors.black),
-                      ))
-                ],
+        builder: (contex) {
+          return AlertDialog(
+            title: const Text('Deseja excluir esse evento?'),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: const [Text('Todo o conteúdo sera removido')],
               ),
             ),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    setState(() {
+                      _countDownRemove = Map.from(event[index]);
+                      event.removeAt(index);
+                      Navigator.of(context).pop();
+                    });
+                  },
+                  child: const Text('Ok')),
+              TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text('Cancelar'))
+            ],
           );
-        }));
+        });
   }
 
   void _addList() {
